@@ -1,7 +1,7 @@
 package config
 
 type DBConfig struct {
-	Dialect string
+	Dialect  string
 	Host     string
 	Port     int
 	Username string

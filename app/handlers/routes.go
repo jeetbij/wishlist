@@ -8,6 +8,6 @@ import (
 )
 
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
-    
+
 	wishlists.RegisterRoutes(router, db)
 }

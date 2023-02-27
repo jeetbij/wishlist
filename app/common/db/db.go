@@ -1,14 +1,14 @@
 package db
 
 import (
-	"log"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/postgres"
-    "gorm.io/gorm"
+	"gorm.io/gorm"
 
-	"example/bucket/app/models"
 	"example/bucket/app/common/config"
+	"example/bucket/app/models"
 )
 
 func Init() *gorm.DB {
