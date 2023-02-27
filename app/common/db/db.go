@@ -8,8 +8,9 @@ import (
 	"gorm.io/gorm"
 
 	"example/bucket/app/common/config"
-	"example/bucket/app/models"
 )
+
+var DB *gorm.DB
 
 func Init() *gorm.DB {
 	config := config.GetConfig()
@@ -22,13 +23,12 @@ func Init() *gorm.DB {
 		config.Database,
 	)
 
-	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	db.AutoMigrate(&models.Wishlist{}, &models.Item{})
-
-	return db
+	return DB
 }
