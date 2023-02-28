@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"example/bucket/app/common/db"
+	"example/bucket/app/config/db"
 	"example/bucket/app/models/user"
 	"fmt"
 	"net/http"

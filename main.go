@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"example/bucket/app/common/config"
-	"example/bucket/app/common/db"
+	"example/bucket/app/config"
+	"example/bucket/app/config/db"
 	"example/bucket/app/handlers"
 )
 
