@@ -2,7 +2,7 @@ package users
 
 import (
 	"example/bucket/app/handlers/users/helpers"
-	"example/bucket/app/models"
+	"example/bucket/app/models/user"
 	"log"
 	"net/http"
 	"os"
@@ -33,8 +33,8 @@ func (h handler) SignUp(ctx *gin.Context) {
 		return
 	}
 
-	user := models.User{UserName: body.UserName, Email: body.Email, Password: string(hash)}
-	result := h.DB.Create(&user)
+	usr := user.User{UserName: body.UserName, Email: body.Email, Password: string(hash)}
+	result := h.DB.Create(&usr)
 
 	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -58,16 +58,16 @@ func (h handler) LogIn(ctx *gin.Context) {
 		return
 	}
 
-	var user models.User
-	h.DB.First(&user, "email = ?", body.Email)
-	if user.ID == 0 {
+	var usr user.User
+	h.DB.First(&usr, "email = ?", body.Email)
+	if usr.ID == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
 		})
 		return
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
+	err := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -77,7 +77,7 @@ func (h handler) LogIn(ctx *gin.Context) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": user.Email,
+		"email": usr.Email,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	})
 

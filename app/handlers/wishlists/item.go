@@ -8,7 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"example/bucket/app/handlers/wishlists/helpers"
-	"example/bucket/app/models"
+	"example/bucket/app/models/item"
+	"example/bucket/app/models/wishlist"
 )
 
 func (h handler) AddItem(ctx *gin.Context) {
@@ -26,29 +27,29 @@ func (h handler) AddItem(ctx *gin.Context) {
 		return
 	}
 
-	var wishlist models.Wishlist
+	var wishlst wishlist.Wishlist
 
-	result := h.DB.Scopes(models.UnarchivedWishlist).First(&wishlist, wishlistId)
+	result := h.DB.Scopes(wishlist.UnarchivedWishlist).First(&wishlst, wishlistId)
 	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	var item models.Item
+	var itm item.Item
 
-	item.WishlistID = uint(wishlistId)
-	item.Name = body.Name
-	item.Url = body.Url
-	item.Provider = body.Provider
+	itm.WishlistId = uint(wishlistId)
+	itm.Name = body.Name
+	itm.Url = body.Url
+	itm.Provider = body.Provider
 
-	if result := h.DB.Create(&item); result.Error != nil {
+	if result := h.DB.Create(&itm); result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, &item)
+	ctx.JSON(http.StatusCreated, &itm)
 }
 
 func (h handler) UpdateItem(ctx *gin.Context) {
@@ -63,28 +64,28 @@ func (h handler) UpdateItem(ctx *gin.Context) {
 		return
 	}
 
-	var wishlist models.Wishlist
+	var wishlst wishlist.Wishlist
 
-	if result := h.DB.Scopes(models.UnarchivedWishlist).First(&wishlist, wishlistId); result.Error != nil {
+	if result := h.DB.Scopes(wishlist.UnarchivedWishlist).First(&wishlst, wishlistId); result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	var item models.Item
+	var itm item.Item
 
-	if result := h.DB.Scopes(models.ActiveItems).First(&item, itemId); result.Error != nil {
+	if result := h.DB.Scopes(item.ActiveItems).First(&itm, itemId); result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	item.Description = body.Description
-	item.Priority = body.Priority
+	itm.Description = body.Description
+	itm.Priority = body.Priority
 
-	h.DB.Save(&item)
+	h.DB.Save(&itm)
 
-	ctx.JSON(http.StatusOK, &item)
+	ctx.JSON(http.StatusOK, &itm)
 
 }
 
@@ -92,24 +93,24 @@ func (h handler) RemoveItem(ctx *gin.Context) {
 	wishlistId := ctx.Param("wishlist_id")
 	itemId := ctx.Param("item_id")
 
-	var wishlist models.Wishlist
+	var wishlst wishlist.Wishlist
 
-	if result := h.DB.Scopes(models.UnarchivedWishlist).First(&wishlist, wishlistId); result.Error != nil {
+	if result := h.DB.Scopes(wishlist.UnarchivedWishlist).First(&wishlst, wishlistId); result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	var item models.Item
+	var itm item.Item
 
-	if result := h.DB.Scopes(models.ActiveItems).First(&item, itemId); result.Error != nil {
+	if result := h.DB.Scopes(item.ActiveItems).First(&itm, itemId); result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
-	item.IsActive = false
-	h.DB.Save(&item)
+	itm.IsActive = false
+	h.DB.Save(&itm)
 
 	ctx.Status(http.StatusOK)
 }

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"example/bucket/app/common/db"
-	"example/bucket/app/models"
+	"example/bucket/app/models/user"
 	"fmt"
 	"net/http"
 	"os"
@@ -33,12 +33,12 @@ func RequireAuth(ctx *gin.Context) {
 				ctx.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
-			var user models.User
-			db.DB.First(&user, "email = ?", claims["email"])
-			if user.ID == 0 {
+			var usr user.User
+			db.DB.First(&usr, "email = ?", claims["email"])
+			if usr.ID == 0 {
 				ctx.AbortWithStatus(http.StatusUnauthorized)
 			}
-			ctx.Set("user", user)
+			ctx.Set("user", usr)
 		} else {
 			fmt.Println(err)
 		}

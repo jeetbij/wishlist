@@ -1,18 +1,20 @@
-package models
+package item
 
 import (
+	"example/bucket/app/models"
+
 	"gorm.io/gorm"
 )
 
 type Item struct {
-	CommonModelFields
+	models.CommonModelFields
 	Name        string `json:"name"`
 	Url         string `json:"url"`
 	Provider    string `json:"provider"`
 	Description string `json:"description"`
 	Priority    string `json:"priority"`
 	IsActive    bool   `gorm:"default:true" json:"is_active"`
-	WishlistID  uint   `json:"wishlist_id"`
+	WishlistId  uint   `json:"wishlist_id"`
 }
 
 func ActiveItems(db *gorm.DB) *gorm.DB {
