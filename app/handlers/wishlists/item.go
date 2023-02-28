@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"example/bucket/app/handlers/wishlists/helpers"
+	"example/bucket/app/helpers"
 	"example/bucket/app/models/item"
 	"example/bucket/app/models/wishlist"
 )

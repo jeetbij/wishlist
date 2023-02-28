@@ -1,8 +1,9 @@
 package users
 
 import (
-	"example/bucket/app/handlers/users/helpers"
+	"example/bucket/app/helpers"
 	"example/bucket/app/models/user"
+
 	"log"
 	"net/http"
 	"os"

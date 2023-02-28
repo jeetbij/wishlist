@@ -6,11 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"example/bucket/app/handlers/wishlists/helpers"
+	"example/bucket/app/helpers"
 	"example/bucket/app/models/wishlist"
 )
 
 func (h handler) CreateWishlist(ctx *gin.Context) {
+	usr, _ := helpers.GetUser(ctx)
+	userId := helpers.GetUserId(usr)
 	body := helpers.CreateWishlistRequestBody{}
 
 	if err := ctx.BindJSON(&body); err != nil {
@@ -21,6 +23,7 @@ func (h handler) CreateWishlist(ctx *gin.Context) {
 
 	var wishlist wishlist.Wishlist
 
+	wishlist.UserId = userId
 	wishlist.Name = body.Name
 	wishlist.Type = body.Type
 	wishlist.Description = body.Description

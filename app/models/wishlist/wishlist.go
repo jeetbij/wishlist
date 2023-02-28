@@ -9,7 +9,7 @@ import (
 
 type Wishlist struct {
 	models.CommonModelFields
-	UserId      int         `json:"user_id"`
+	UserId      uint        `json:"user_id"`
 	Name        string      `json:"url"`
 	Type        string      `json:"type"`
 	Description string      `json:"description"`
