@@ -1,8 +1,11 @@
 package user
 
 import (
+	"example/bucket/app/config/db"
 	"example/bucket/app/models"
 	"example/bucket/app/models/wishlist"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -12,4 +15,12 @@ type User struct {
 	MobileNo  string              `gorm:"unique; default:null" json:"mobile_no"`
 	Password  string              `json:"password"`
 	Wishlists []wishlist.Wishlist `gorm:"ForeignKey:UserId" json:"wishlists"`
+}
+
+func DB() *gorm.DB {
+	return db.DB
+}
+
+func (usr User) String() string {
+	return usr.Email
 }

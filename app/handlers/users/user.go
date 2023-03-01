@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (h handler) SignUp(ctx *gin.Context) {
+func SignUp(ctx *gin.Context) {
 	body := helpers.SignUpRequestBody{}
 
 	if err := ctx.BindJSON(&body); err != nil {
@@ -35,7 +35,7 @@ func (h handler) SignUp(ctx *gin.Context) {
 	}
 
 	usr := user.User{UserName: body.UserName, Email: body.Email, Password: string(hash)}
-	result := h.DB.Create(&usr)
+	result := user.DB().Create(&usr)
 
 	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -48,7 +48,7 @@ func (h handler) SignUp(ctx *gin.Context) {
 	})
 }
 
-func (h handler) LogIn(ctx *gin.Context) {
+func LogIn(ctx *gin.Context) {
 	body := helpers.LogInRequestBody{}
 
 	if err := ctx.BindJSON(&body); err != nil {
@@ -60,7 +60,7 @@ func (h handler) LogIn(ctx *gin.Context) {
 	}
 
 	var usr user.User
-	h.DB.First(&usr, "email = ?", body.Email)
+	user.DB().First(&usr, "email = ?", body.Email)
 	if usr.ID == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
@@ -98,7 +98,7 @@ func (h handler) LogIn(ctx *gin.Context) {
 	})
 }
 
-func (h handler) Validate(ctx *gin.Context) {
+func Validate(ctx *gin.Context) {
 	_, notGuest := ctx.Get("user")
 
 	if notGuest {

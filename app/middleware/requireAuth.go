@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"example/bucket/app/config/db"
 	"example/bucket/app/models/user"
 	"fmt"
 	"net/http"
@@ -28,19 +27,21 @@ func RequireAuth(ctx *gin.Context) {
 		})
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			fmt.Println(claims["email"], claims["exp"])
 			if float64(time.Now().Unix()) > claims["exp"].(float64) {
 				ctx.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
 			var usr user.User
-			db.DB.First(&usr, "email = ?", claims["email"])
+			user.DB().First(&usr, "email = ?", claims["email"])
 			if usr.ID == 0 {
 				ctx.AbortWithStatus(http.StatusUnauthorized)
+				return
 			}
 			ctx.Set("user", usr)
 		} else {
 			fmt.Println(err)
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 	}

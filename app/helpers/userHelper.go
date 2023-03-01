@@ -7,7 +7,7 @@ import (
 )
 
 func GetUser(ctx *gin.Context) (user.User, bool) {
-	usr, present := ctx.Get("User")
+	usr, present := ctx.Get("user")
 
 	if present {
 		return usr.(user.User), true

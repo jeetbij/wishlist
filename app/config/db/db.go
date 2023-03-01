@@ -12,7 +12,7 @@ import (
 
 var DB *gorm.DB
 
-func Init() *gorm.DB {
+func Init() {
 	config := config.GetConfig()
 	url := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
 		config.Dialect,
@@ -29,6 +29,4 @@ func Init() *gorm.DB {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	return DB
 }

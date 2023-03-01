@@ -7,17 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type handler struct {
-	DB *gorm.DB
-}
-
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
-	h := &handler{
-		DB: db,
-	}
 
 	routes := router.Group("/users")
-	routes.POST("/signup", h.SignUp)
-	routes.POST("/login", h.LogIn)
-	routes.GET("/validate", middleware.RequireAuth, h.Validate)
+	routes.POST("/signup", SignUp)
+	routes.POST("/login", LogIn)
+	routes.GET("/validate", middleware.RequireAuth, Validate)
 }

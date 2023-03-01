@@ -34,7 +34,7 @@ func LoadEnvVariables() {
 	currentWorkDirectory, _ := os.Getwd()
 	rootPath := projectName.Find([]byte(currentWorkDirectory))
 
-	err := godotenv.Load(string(rootPath) + "/app/common/envs/.env")
+	err := godotenv.Load(string(rootPath) + "/app/config/envs/.env")
 
 	if err != nil {
 		log.Println(err)
