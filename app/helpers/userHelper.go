@@ -6,6 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetGuestToken(ctx *gin.Context) string {
+	token, present := ctx.Get("token")
+	if present {
+		return token.(string)
+	}
+	return ""
+}
+
 func GetUser(ctx *gin.Context) (user.User, bool) {
 	usr, present := ctx.Get("user")
 

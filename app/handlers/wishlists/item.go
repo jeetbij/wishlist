@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"example/bucket/app/helpers"
 	"example/bucket/app/models/item"
@@ -13,6 +14,7 @@ import (
 )
 
 func AddItem(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	wishlistId, err := strconv.Atoi(ctx.Param("wishlist_id"))
 	if err != nil {
@@ -29,8 +31,13 @@ func AddItem(ctx *gin.Context) {
 	}
 
 	var wishlst wishlist.Wishlist
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).First(&wishlst, wishlistId)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).First(&wishlst, wishlistId)
+	}
 
-	result := wishlist.Wishlists(usr.ID).First(&wishlst, wishlistId)
 	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
@@ -54,6 +61,7 @@ func AddItem(ctx *gin.Context) {
 }
 
 func UpdateItem(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	wishlistId := ctx.Param("wishlist_id")
 	itemId := ctx.Param("item_id")
@@ -67,8 +75,14 @@ func UpdateItem(ctx *gin.Context) {
 	}
 
 	var wishlst wishlist.Wishlist
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).First(&wishlst, wishlistId)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).First(&wishlst, wishlistId)
+	}
 
-	if result := wishlist.Wishlists(usr.ID).First(&wishlst, wishlistId); result.Error != nil {
+	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
@@ -92,13 +106,20 @@ func UpdateItem(ctx *gin.Context) {
 }
 
 func RemoveItem(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	wishlistId := ctx.Param("wishlist_id")
 	itemId := ctx.Param("item_id")
 
 	var wishlst wishlist.Wishlist
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).First(&wishlst, wishlistId)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).First(&wishlst, wishlistId)
+	}
 
-	if result := wishlist.Wishlists(usr.ID).First(&wishlst, wishlistId); result.Error != nil {
+	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return

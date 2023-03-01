@@ -9,6 +9,7 @@ import (
 	"example/bucket/app/config/db"
 	"example/bucket/app/config/db/migration"
 	"example/bucket/app/handlers"
+	"example/bucket/app/middleware"
 )
 
 func init() {
@@ -19,7 +20,11 @@ func init() {
 
 func main() {
 	router := gin.Default()
+	// Add Middlewares
+	router.Use(middleware.SetGuestToken)
+	router.Use(middleware.RequireAuth)
 
+	// Register Routes
 	handlers.RegisterRoutes(router, db.DB)
 
 	router.Run(os.Getenv("PORT"))

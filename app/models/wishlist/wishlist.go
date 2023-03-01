@@ -11,11 +11,12 @@ import (
 
 type Wishlist struct {
 	models.CommonModelFields
-	UserId      uint        `json:"user_id"`
+	UserId      uint        `gorm:"default:null" json:"user_id"`
 	Name        string      `json:"url"`
 	Type        string      `json:"type"`
 	Description string      `json:"description"`
 	Archived    bool        `gorm:"default:false" json:"archived"`
+	Token       string      `json:"token"`
 	Items       []item.Item `gorm:"ForeignKey:WishlistId" json:"items"`
 }
 
@@ -31,12 +32,12 @@ func UnarchivedWishlist() *gorm.DB {
 	return DB().Preload("Items", "is_active = ?", true).Where("archived = ?", false)
 }
 
-func Wishlists(userId uint) *gorm.DB {
-	var result *gorm.DB
-	if userId != 0 {
-		result = UnarchivedWishlist().Where("user_id = ?", userId)
-	} else {
-		result = UnarchivedWishlist()
-	}
+func UserWishlists(userId uint) *gorm.DB {
+	result := UnarchivedWishlist().Where("user_id = ?", userId)
+	return result
+}
+
+func GuestWishlists(token string) *gorm.DB {
+	result := UnarchivedWishlist().Where("token = ?", token)
 	return result
 }

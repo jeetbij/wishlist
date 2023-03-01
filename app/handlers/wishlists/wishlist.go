@@ -5,12 +5,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"example/bucket/app/helpers"
 	"example/bucket/app/models/wishlist"
 )
 
 func CreateWishlist(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	userId := helpers.GetUserId(usr)
 	body := helpers.CreateWishlistRequestBody{}
@@ -27,6 +29,7 @@ func CreateWishlist(ctx *gin.Context) {
 	wishlst.Name = body.Name
 	wishlst.Type = body.Type
 	wishlst.Description = body.Description
+	wishlst.Token = token
 
 	if result := wishlist.DB().Create(&wishlst); result.Error != nil {
 		log.Println(result.Error)
@@ -38,11 +41,16 @@ func CreateWishlist(ctx *gin.Context) {
 }
 
 func GetWishlists(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 
 	var wishlists []wishlist.Wishlist
-
-	result := wishlist.Wishlists(usr.ID).Find(&wishlists)
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).Find(&wishlists)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).Find(&wishlists)
+	}
 
 	if result.Error != nil {
 		log.Println(result.Error)
@@ -54,12 +62,18 @@ func GetWishlists(ctx *gin.Context) {
 }
 
 func GetWishlist(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	wishlistId := ctx.Param("wishlist_id")
 
 	var wishlst wishlist.Wishlist
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).Where("id = ?", wishlistId).First(&wishlst)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).Where("id = ?", wishlistId).First(&wishlst)
+	}
 
-	result := wishlist.Wishlists(usr.ID).Where("id = ?", wishlistId).First(&wishlst)
 	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
@@ -70,12 +84,18 @@ func GetWishlist(ctx *gin.Context) {
 }
 
 func ArchiveWishlist(ctx *gin.Context) {
+	token := helpers.GetGuestToken(ctx)
 	usr, _ := helpers.GetUser(ctx)
 	wishlistId := ctx.Param("wishlist_id")
 
 	var wishlst wishlist.Wishlist
+	var result *gorm.DB
+	if usr.ID == 0 {
+		result = wishlist.GuestWishlists(token).First(&wishlst, wishlistId)
+	} else {
+		result = wishlist.UserWishlists(usr.ID).First(&wishlst, wishlistId)
+	}
 
-	result := wishlist.Wishlists(usr.ID).First(&wishlst, wishlistId)
 	if result.Error != nil {
 		log.Println(result.Error)
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
