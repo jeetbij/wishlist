@@ -19,6 +19,12 @@ func init() {
 }
 
 func main() {
+	if os.Getenv("MODE") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
+
 	router := gin.Default()
 	// Add Middlewares
 	router.Use(middleware.SetGuestToken)
@@ -27,5 +33,5 @@ func main() {
 	// Register Routes
 	handlers.RegisterRoutes(router, db.DB)
 
-	router.Run(os.Getenv("PORT"))
+	router.Run(":" + os.Getenv("PORT"))
 }

@@ -10,6 +10,11 @@ import (
 
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
 
+	router.GET("/health/check", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"status": "OK",
+		})
+	})
 	wishlists.RegisterRoutes(router, db)
 	users.RegisterRoutes(router, db)
 }

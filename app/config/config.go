@@ -3,7 +3,7 @@ package config
 import (
 	"log"
 	"os"
-	"regexp"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -17,27 +17,37 @@ type DBConfig struct {
 	Database string
 }
 
-func GetConfig() *DBConfig {
-	return &DBConfig{
-		Dialect:  "postgres",
-		Host:     "127.0.0.1",
-		Port:     5432,
-		Username: "root",
-		Password: "jeet@postgresql",
-		Database: "bucket",
-	}
-}
-
 func LoadEnvVariables() {
-	var projectDirName = "bucket"
-	projectName := regexp.MustCompile(`^(.*` + projectDirName + `)`)
-	currentWorkDirectory, _ := os.Getwd()
-	rootPath := projectName.Find([]byte(currentWorkDirectory))
+	rootPath, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Failed to load env")
+	}
+	env := os.Getenv("MODE")
+	if env == "" {
+		env = "debug"
+	}
 
-	err := godotenv.Load(string(rootPath) + "/app/config/envs/.env")
+	err = godotenv.Load(rootPath + "/app/config/envs/" + env + "/.env")
 
 	if err != nil {
 		log.Println(err)
-		log.Fatal("Failed to load env")
+		log.Fatal("Failed to load .env for environment " + env)
+	}
+}
+
+func GetConfig() *DBConfig {
+	port, err := strconv.Atoi(os.Getenv("DATABASE_PORT"))
+	if err != nil {
+		log.Println(err)
+		log.Fatal("Failed to get database port")
+	}
+
+	return &DBConfig{
+		Dialect:  "postgres",
+		Host:     os.Getenv("DATABASE_HOST"),
+		Port:     port,
+		Username: os.Getenv("DATABASE_USER"),
+		Password: os.Getenv("DATABASE_PASS"),
+		Database: os.Getenv("DATABASE_NAME"),
 	}
 }

@@ -9,5 +9,7 @@ import (
 )
 
 func Migration(db *gorm.DB) {
-	db.AutoMigrate(&wishlist.Wishlist{}, &item.Item{}, &user.User{})
+	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&wishlist.Wishlist{})
+	db.AutoMigrate(&item.Item{})
 }
