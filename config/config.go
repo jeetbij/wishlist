@@ -27,7 +27,7 @@ func LoadEnvVariables() {
 		env = "debug"
 	}
 
-	err = godotenv.Load(rootPath + "/app/config/envs/" + env + "/.env")
+	err = godotenv.Load(rootPath + "/config/envs/" + env + "/.env")
 
 	if err != nil {
 		log.Println(err)
