@@ -18,7 +18,7 @@ func init() {
 	migration.Migration(db.DB)
 }
 
-func main() {
+func setupRouter() *gin.Engine {
 	if os.Getenv("MODE") == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
@@ -32,6 +32,10 @@ func main() {
 
 	// Register Routes
 	handlers.RegisterRoutes(router, db.DB)
+	return router
+}
 
+func main() {
+	router := setupRouter()
 	router.Run(":" + os.Getenv("PORT"))
 }

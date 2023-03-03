@@ -10,7 +10,7 @@ import (
 
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
 
-	router.GET("/health/check", func(ctx *gin.Context) {
+	router.GET("/health_check", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"status": "OK",
 		})
