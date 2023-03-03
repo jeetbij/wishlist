@@ -1,9 +1,9 @@
 package wishlist
 
 import (
-	"example/bucket/app/config/db"
 	"example/bucket/app/models"
 	"example/bucket/app/models/item"
+	"example/bucket/config/db"
 	"fmt"
 
 	"gorm.io/gorm"

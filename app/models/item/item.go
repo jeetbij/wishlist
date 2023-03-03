@@ -1,8 +1,8 @@
 package item
 
 import (
-	"example/bucket/app/config/db"
 	"example/bucket/app/models"
+	"example/bucket/config/db"
 	"fmt"
 
 	"gorm.io/gorm"

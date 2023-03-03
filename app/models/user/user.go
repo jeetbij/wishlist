@@ -1,9 +1,9 @@
 package user
 
 import (
-	"example/bucket/app/config/db"
 	"example/bucket/app/models"
 	"example/bucket/app/models/wishlist"
+	"example/bucket/config/db"
 
 	"gorm.io/gorm"
 )

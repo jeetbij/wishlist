@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"example/bucket/app/config"
-	"example/bucket/app/config/db"
-	"example/bucket/app/config/db/migration"
 	"example/bucket/app/handlers"
 	"example/bucket/app/middleware"
+	"example/bucket/config"
+	"example/bucket/config/db"
+	"example/bucket/config/db/migration"
 )
 
 func init() {

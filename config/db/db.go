@@ -7,7 +7,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"example/bucket/app/config"
+	"example/bucket/config"
 )
 
 var DB *gorm.DB
