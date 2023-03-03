@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"example/bucket/app/models/user"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,4 +29,15 @@ func GetUserId(user user.User) uint {
 		return 0
 	}
 	return user.ID
+}
+
+func SetCookie(ctx *gin.Context, name string, value string, maxAge int) {
+	// Need to change domain name later
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie(name, value, maxAge, "", "", false, true)
+}
+
+func DeleteCookie(ctx *gin.Context, name string) {
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie(name, "", -1, "", "", false, true)
 }

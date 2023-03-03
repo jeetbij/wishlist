@@ -3,8 +3,8 @@ package middleware
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"example/bucket/app/helpers"
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,9 +25,7 @@ func SetGuestToken(ctx *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		token = generateToken()
-		// Need to change domain name later
-		ctx.SetSameSite(http.SameSiteLaxMode)
-		ctx.SetCookie("token", token, (3600 * 24 * 30 * 12), "", "", false, true)
+		helpers.SetCookie(ctx, "token", token, (3600 * 24 * 30 * 12))
 	}
 	ctx.Set("token", token)
 	ctx.Next()

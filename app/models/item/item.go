@@ -20,7 +20,7 @@ type Item struct {
 }
 
 func DB() *gorm.DB {
-	return db.DB
+	return db.DB.Model(&Item{})
 }
 
 func (itm Item) String() string {

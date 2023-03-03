@@ -26,8 +26,7 @@ func setupRouter() *gin.Engine {
 	}
 
 	router := gin.Default()
-	// Add Middlewares
-	router.Use(middleware.SetGuestToken)
+	// Add common Middlewares
 	router.Use(middleware.RequireAuth)
 
 	// Register Routes

@@ -3,6 +3,7 @@ package users
 import (
 	"example/bucket/app/helpers"
 	"example/bucket/app/models/user"
+	"example/bucket/app/models/wishlist"
 
 	"log"
 	"net/http"
@@ -91,6 +92,15 @@ func LogIn(ctx *gin.Context) {
 			"error": "Failed to generate a token",
 		})
 		return
+	}
+
+	// Assign user to guest wishlists in current session if any
+	guestToken, err := ctx.Cookie("token")
+	if err != nil {
+		log.Println(err)
+	} else {
+		wishlist.AssignUserToWishlists(guestToken, usr.ID)
+		helpers.DeleteCookie(ctx, "token")
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{

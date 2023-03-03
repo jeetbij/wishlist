@@ -18,7 +18,7 @@ type User struct {
 }
 
 func DB() *gorm.DB {
-	return db.DB
+	return db.DB.Model(&User{})
 }
 
 func (usr User) String() string {

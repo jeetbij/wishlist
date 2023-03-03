@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	"example/bucket/config"
 )
@@ -24,7 +25,9 @@ func Init() {
 	)
 
 	var err error
-	DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(url), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
 		log.Fatalln(err)

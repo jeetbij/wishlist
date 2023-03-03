@@ -21,7 +21,7 @@ type Wishlist struct {
 }
 
 func DB() *gorm.DB {
-	return db.DB
+	return db.DB.Model(&Wishlist{})
 }
 
 func (wishlst Wishlist) String() string {
@@ -38,6 +38,10 @@ func UserWishlists(userId uint) *gorm.DB {
 }
 
 func GuestWishlists(token string) *gorm.DB {
-	result := UnarchivedWishlist().Where("token = ?", token)
+	result := UnarchivedWishlist().Where("token = ? AND user_id is null", token)
 	return result
+}
+
+func AssignUserToWishlists(guestToken string, userId uint) {
+	GuestWishlists(guestToken).Update("user_id", userId)
 }

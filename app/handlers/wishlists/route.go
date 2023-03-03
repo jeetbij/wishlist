@@ -1,6 +1,8 @@
 package wishlists
 
 import (
+	"example/bucket/app/middleware"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -8,6 +10,8 @@ import (
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
 
 	routes := router.Group("/wishlists")
+	routes.Use(middleware.SetGuestToken)
+
 	routes.POST("/", CreateWishlist)
 	routes.GET("/", GetWishlists)
 	routes.GET("/:wishlist_id", GetWishlist)

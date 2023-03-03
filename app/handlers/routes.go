@@ -15,6 +15,6 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
 			"status": "OK",
 		})
 	})
-	wishlists.RegisterRoutes(router, db)
 	users.RegisterRoutes(router, db)
+	wishlists.RegisterRoutes(router, db)
 }
