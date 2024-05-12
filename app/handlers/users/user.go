@@ -94,7 +94,7 @@ func LogIn(ctx *gin.Context) {
 		return
 	}
 
-	// Assign user to guest wishlists in current session if any
+	// Assign user to guest wishlists if any
 	guestToken, err := ctx.Cookie("token")
 	if err != nil {
 		log.Println(err)
@@ -109,11 +109,11 @@ func LogIn(ctx *gin.Context) {
 }
 
 func Validate(ctx *gin.Context) {
-	_, notGuest := ctx.Get("user")
+	usr, notGuest := helpers.GetUser(ctx)
 
 	if notGuest {
 		ctx.JSON(http.StatusOK, gin.H{
-			"success": "I am a logged in user",
+			"success": "I am a logged in user with email - " + usr.Email,
 		})
 		return
 	}

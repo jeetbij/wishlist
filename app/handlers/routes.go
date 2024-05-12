@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
@@ -11,6 +13,12 @@ import (
 func RegisterRoutes(router *gin.Engine, db *gorm.DB) {
 
 	router.GET("/health_check", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"status": "OK",
+		})
+	})
+	router.GET("/register", func(ctx *gin.Context) {
+		log.Println("[EXTENTION_INSTALLED]")
 		ctx.JSON(200, gin.H{
 			"status": "OK",
 		})
